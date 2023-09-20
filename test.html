@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EZ-Fingerprinter</title>
+
+    <script src="index.js"></script>
+</head>
+
+<body>
+    <h1>Hello, World!</h1>
+    <p>This is a simple HTML page that includes an external JavaScript module.</p>
+</body>
+
+<script>
+    console.log(EZFingerprinter)
+
+    ;(async () => {
+        await EZFingerprinter.storeFingerprint()
+    })();
+</script>
+
+</html>

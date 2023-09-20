@@ -1,0 +1,29 @@
+{
+  "name": "ez-fingerprinter",
+  "version": "1.0.0",
+  "description": "A lightweight JavaScript library for generating and managing user fingerprints in web applications",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JijaProGamer/ez-fingerprinter.git"
+  },
+  "keywords": [
+    "fingerprinting",
+    "browser",
+    "fingerprint",
+    "analytics",
+    "device",
+    "identification",
+    "tracking",
+    "privacy"
+  ],
+  "author": "Bloxxy213",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JijaProGamer/ez-fingerprinter/issues"
+  },
+  "homepage": "https://github.com/JijaProGamer/ez-fingerprinter#readme"
+}
