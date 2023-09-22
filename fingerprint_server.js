@@ -27,8 +27,6 @@ function Serve(data, trustProxy=false) {
     delete result.headers["cookie"]
     delete result.headers["if-none-match"]
 
-    result.headersLength = Object.keys(result.headers).length
-    result.headersPresent = Object.keys(result.headers)
     result.languages = []
     result["sec-ch"] = {}
 
@@ -43,6 +41,9 @@ function Serve(data, trustProxy=false) {
     delete result.headers["x-forwarded-proto"]
     delete result.headers["x-forwarded-for"]
     delete result.headers["x-real-ip"]
+
+    result.headersLength = Object.keys(result.headers).length
+    result.headersPresent = Object.keys(result.headers)
 
     result.headersPresent.forEach(element => {
         if (!element.includes("sec-ch")) return;

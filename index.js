@@ -111,6 +111,7 @@ EZFingerprinter.generateFingerprint = async function (opts = {}) {
         memory: navigator.deviceMemory,
         cpus: navigator.hardwareConcurrency,
         oscpu: 'oscpu' in navigator ? navigator.oscpu : "",
+        mediaDevices: [],
 
         maxTouchPoints: navigator.maxTouchPoints,
     }
@@ -122,7 +123,6 @@ EZFingerprinter.generateFingerprint = async function (opts = {}) {
         languages: navigator.languages,
 
         mediaCapabilities: { video: {}, audio: {} },
-        mediaDevices: [],
 
         pdfViewer: navigator.pdfViewerEnabled,
         userAgent: navigator.userAgent, // navigator.userAgentData
@@ -209,12 +209,12 @@ EZFingerprinter.generateFingerprint = async function (opts = {}) {
 
     if (!opts.skip.includes("mediaDevices")) {
         for (let mediaDevice of await navigator.mediaDevices.enumerateDevices()) {
-            fingerprint.software.mediaDevices.push(mediaDevice)
+            fingerprint.hardware.mediaDevices.push(mediaDevice)
         }
     }
 
     if (!opts.skip.includes("glParameters")) {
-        for (let key in gl) {
+        /*for (let key in gl) {
             if (key !== key.toUpperCase()) continue;
             if (typeof gl[key] !== 'number') continue;
 
@@ -222,7 +222,7 @@ EZFingerprinter.generateFingerprint = async function (opts = {}) {
             if (parameter == null) continue;
 
             fingerprint.hardware.gpu.optionalData[key] = parameter
-        }
+        }*/
     }
 
     return fingerprint
