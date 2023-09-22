@@ -16,7 +16,8 @@
 
 <script>
     ;(async () => {
-        console.log(await EZFingerprinter.generateFingerprint({networkURL: "http://localhost:3000/fingerprint", includeIP: true}))
+        let fingerprint = await EZFingerprinter.generateFingerprint({networkURL: "/fingerprint", includeIP: true})
+        console.log(fingerprint, await EZFingerprinter.hashFingerprint(fingerprint))
     })();
 </script>
 

@@ -4,7 +4,9 @@ if (!window.crypto) {
 
 let EZFingerprinter = {}
 let configurations = {
-    video: [`mp4; codecs="avc1.640028"`, `webm; codecs="vp9"`, `mp4; codecs="hvc1"`,
+    video: [`mp4; codecs="avc1.640028"`, `mp4; codecs="flac"`,
+        `ogg; codecs="theora"`,
+        `webm; codecs="vp9"`, `mp4; codecs="hvc1"`,
         `webm; codecs="vp8"`, `mp4; codecs="av01"`, "x-mpeg1", "x-mpeg2"
     ],
     audio: ["mp3", "aac", "ogg; codecs=vorbis", "flac", "wav", "opus", "ac3", "mpeg"]
@@ -96,15 +98,21 @@ EZFingerprinter.generateFingerprint = async function (opts = {}) {
         ...opts
     }
 
+    await document.fonts.ready
+
     let fingerprint = {}
 
     let canvas = document.createElement('canvas')
     let gl = canvas.getContext('webgl', { failIfMajorPerformanceCaveat: false })
-
+    const gl_debugInfo = gl.getExtension("WEBGL_debug_renderer_info");
+    let fonts = [...document.fonts]
+    
     fingerprint.hardware = {
         gpu: {
             vendor: gl.getParameter(gl.VENDOR),
             renderer: gl.getParameter(gl.RENDERER),
+            hidden_vendor: gl.getParameter(gl_debugInfo.UNMASKED_VENDOR_WEBGL),
+            hidden_renderer: gl.getParameter(gl_debugInfo.UNMASKED_RENDERER_WEBGL),
             optionalData: {},
         },
 
@@ -112,6 +120,15 @@ EZFingerprinter.generateFingerprint = async function (opts = {}) {
         cpus: navigator.hardwareConcurrency,
         oscpu: 'oscpu' in navigator ? navigator.oscpu : "",
         mediaDevices: [],
+
+        display: {
+            size: {
+                width: window.screen.width,
+                height: window.screen.height,
+                colorDepth: window.screen.colorDepth,
+                pixelDepth: window.screen.pixelDepth
+            }
+        },
 
         maxTouchPoints: navigator.maxTouchPoints,
     }
@@ -128,11 +145,15 @@ EZFingerprinter.generateFingerprint = async function (opts = {}) {
         userAgent: navigator.userAgent, // navigator.userAgentData
         webdriver: navigator.webdriver,
         buildID: navigator.buildID,
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        fonts,
+
         productSub: 'productSub ' in navigator ? navigator.productSub : "",
         appVersion: 'appVersion' in navigator ? navigator.appVersion : "",
         platform: 'platform' in navigator ? navigator.platform : "",
         plugins: 'plugins' in navigator ? navigator.plugins : [],
     }
+
 
     fingerprint.network = {}
 
@@ -145,7 +166,7 @@ EZFingerprinter.generateFingerprint = async function (opts = {}) {
         try {
             data = await data.json()
 
-            if(opts.includeIP){
+            if (opts.includeIP) {
                 fingerprint.ip = data.ip
             }
 
@@ -180,9 +201,9 @@ EZFingerprinter.generateFingerprint = async function (opts = {}) {
                 type: "file",
                 video: {
                     contentType: `video/${type}`,
-                    width: 1920,
-                    height: 1080,
-                    framerate: 30,
+                    width: 720,
+                    height: 480,
+                    framerate: 24,
                     bitrate: 3 * 1000000, // 3mbps
                 },
             }))
@@ -209,7 +230,13 @@ EZFingerprinter.generateFingerprint = async function (opts = {}) {
 
     if (!opts.skip.includes("mediaDevices")) {
         for (let mediaDevice of await navigator.mediaDevices.enumerateDevices()) {
-            fingerprint.hardware.mediaDevices.push(mediaDevice)
+            let device = {
+                kind: mediaDevice.kind,
+                label: mediaDevice.label,
+                deviceId: mediaDevice.deviceId
+            }
+
+            fingerprint.hardware.mediaDevices.push(device)
         }
     }
 
