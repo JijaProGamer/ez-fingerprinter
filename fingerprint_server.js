@@ -17,13 +17,15 @@ function parseAcceptLanguage(acceptLanguageHeader) {
       .sort((a, b) => b.quality - a.quality);
   }
 
-function Serve(data) {
+function Serve(data, trustProxy=false) {
     let result = {}
 
     result.headers = data.headers
 
     delete result.headers["host"]
     delete result.headers["referer"]
+    delete result.headers["cookie"]
+    delete result.headers["if-none-match"]
 
     result.headersLength = Object.keys(result.headers).length
     result.headersPresent = Object.keys(result.headers)
@@ -32,6 +34,15 @@ function Serve(data) {
 
     result.accept = result.headers["accept"]
     result["user-agent"] = result.headers["user-agent"]
+    result.ip = data.ip
+
+    if(trustProxy){
+        result.ip = result.headers["x-forwarded-for"].split(',')[0]
+    }
+
+    delete result.headers["x-forwarded-proto"]
+    delete result.headers["x-forwarded-for"]
+    delete result.headers["x-real-ip"]
 
     result.headersPresent.forEach(element => {
         if (!element.includes("sec-ch")) return;
@@ -47,16 +58,18 @@ function Serve(data) {
     return result
 }
 
-function ServeHTTP(request) {
+function ServeHTTP(request, trustProxy=false) {
     return Serve({
-        headers: request.headers
-    })
+        headers: request.headers,
+        ip: request.connection.remoteAddress
+    }, trustProxy)
 }
 
-function ServeExpress(request) {
+function ServeExpress(request, trustProxy=false) {
     return Serve({
-        headers: request.headers
-    })
+        headers: request.headers,
+        ip: request.connection.remoteAddress
+    }, trustProxy)
 }
 
 module.exports = { ServeHTTP, ServeExpress, Serve };

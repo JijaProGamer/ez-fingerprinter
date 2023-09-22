@@ -15,7 +15,7 @@ const server = http.createServer((req, res) => {
         return res.end(readFileSync("../index.js", "utf-8"))
     } else if (url === '/fingerprint') {
         res.setHeader('Content-Type', 'application/json');
-        res.end(JSON.stringify(ServeHTTP(req)))
+        res.end(JSON.stringify(ServeHTTP(req, false)))
     }
 });
 

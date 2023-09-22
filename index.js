@@ -145,6 +145,11 @@ EZFingerprinter.generateFingerprint = async function (opts = {}) {
         try {
             data = await data.json()
 
+            if(opts.includeIP){
+                fingerprint.ip = data.ip
+            }
+
+            delete data.ip
             fingerprint.network = data
         } catch (err) {
             throw err

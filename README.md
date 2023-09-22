@@ -35,7 +35,7 @@ npm install ez-fingerprinter
 Or include it as a script tag
 
 ```html
-<script src="https://raw.githubusercontent.com/JijaProGamer/ez-fingerprinter/master/index.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/JijaProGamer/ez-fingerprinter/index.js"></script>
 ```
 
 ### Documentation
